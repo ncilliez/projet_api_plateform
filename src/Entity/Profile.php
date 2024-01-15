@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
@@ -16,74 +14,37 @@ class Profile
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $pseudo = null;
+    private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'profile', targetEntity: Article::class)]
-    private Collection $articles;
-
-    #[ORM\ManyToOne(inversedBy: 'Profile')]
-    private ?Document $document = null;
-
-    public function __construct()
-    {
-        $this->articles = new ArrayCollection();
-    }
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPseudo(): ?string
+    public function getNom(): ?string
     {
-        return $this->pseudo;
+        return $this->nom;
     }
 
-    public function setPseudo(string $pseudo): static
+    public function setNom(string $nom): static
     {
-        $this->pseudo = $pseudo;
+        $this->nom = $nom;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Article>
-     */
-    public function getArticles(): Collection
+    public function getUser(): ?User
     {
-        return $this->articles;
+        return $this->user;
     }
 
-    public function addArticle(Article $article): static
+    public function setUser(User $user): static
     {
-        if (!$this->articles->contains($article)) {
-            $this->articles->add($article);
-            $article->setProfile($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(Article $article): static
-    {
-        if ($this->articles->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getProfile() === $this) {
-                $article->setProfile(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getDocument(): ?Document
-    {
-        return $this->document;
-    }
-
-    public function setDocument(?Document $document): static
-    {
-        $this->document = $document;
+        $this->user = $user;
 
         return $this;
     }
