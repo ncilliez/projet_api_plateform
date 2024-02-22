@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
+#[ApiResource()]
 class Profile
 {
     #[ORM\Id]
